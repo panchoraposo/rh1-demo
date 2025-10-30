@@ -6,6 +6,7 @@
   roles:
     #- role: gitops-config
     - role: gitops-deploy-keycloak
+    - role: gitops-deploy-vault-operator
     - role: keycloak-config
     - role: gitops-deploy-gitlab
     - role: gitlab-config
