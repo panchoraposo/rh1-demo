@@ -11,5 +11,6 @@
     - role: gitops-deploy-gitlab
     - role: gitlab-config
     - role: gitops-deploy-odf
-    - role: gitops-deploy-pipelines
+    #- role: gitops-deploy-pipelines
     - role: gitops-deploy-developer-hub
+    
