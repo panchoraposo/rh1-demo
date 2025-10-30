@@ -30,11 +30,6 @@ data:
         disabled: false
       - package: ./dynamic-plugins/dist/immobiliarelabs-backstage-plugin-gitlab
         disabled: false
-      # --- JENKINS_PLUGIN ---
-      - package: ./dynamic-plugins/dist/backstage-community-plugin-jenkins
-        disabled: false
-      - package: ./dynamic-plugins/dist/backstage-community-plugin-jenkins-backend-dynamic
-        disabled: false
       ## --- TECHDOCS_PLUGIN ---
       - package: ./dynamic-plugins/dist/backstage-plugin-techdocs-backend-dynamic
         disabled: false
@@ -52,12 +47,4 @@ data:
       - package: ./dynamic-plugins/dist/roadiehq-backstage-plugin-argo-cd-backend-dynamic
         disabled: false
       - package: ./dynamic-plugins/dist/backstage-community-plugin-redhat-argocd
-        disabled: false
-      ## --- 3SCALE_PLUGIN ---
-      - package: ./dynamic-plugins/dist/backstage-community-plugin-3scale-backend-dynamic
-        disabled: false
-      ## --- QUAY_PLUGIN ---
-      - package: ./dynamic-plugins/dist/backstage-community-plugin-scaffolder-backend-module-quay-dynamic
-        disabled: false
-      - package: ./dynamic-plugins/dist/backstage-community-plugin-quay
         disabled: false

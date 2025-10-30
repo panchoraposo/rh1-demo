@@ -144,3 +144,24 @@ users_platform:
     last_name: Three
     password: '{{ common_user_password }}'
 realm_json_path: /tmp/developer-hub/backstage-realm.json
+
+# --- Vault & External Secrets ---
+vault_namespace: vault
+vault_app_path: apps/vault
+argo_cd_ns: openshift-gitops
+vault_pod_name: "vault-0"
+vault_revision: 0.30.0
+scc_name: anyuid
+vault_label_selector: "app.kubernetes.io/name=vault"
+vault_addr: "https://127.0.0.1:8200"
+vault_token: "{{ lookup('env', 'VAULT_TOKEN') }}"
+eso_namespace: vault
+eso_sa_name: external-secrets-operator-controller-manager
+vault_k8s_role_name: external-secrets
+vault_sa_name: vault
+helm_repo_name: external-secrets
+helm_repo_url: https://charts.external-secrets.io
+helm_release_name: external-secrets
+chart_name: external-secrets/external-secrets
+service_account_name: external-secrets-operator-controller-manager
+kubeconfig_path: "{{ lookup('env', 'KUBECONFIG') | default('/home/' ~ (ansible_user | default('ansible')) ~ '/.kube/config', true) }}"

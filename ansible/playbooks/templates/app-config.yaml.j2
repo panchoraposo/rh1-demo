@@ -29,19 +29,6 @@ auth:
             - resolver: preferredUsernameMatchingUserEntityName
 signInPage: oidc
 
-quay:
-  uiUrl: https://quay.{{ openshift_base_domain }}
-
-proxy:
-  endpoints:
-    '/quay/api':
-      target: 'https://quay.{{ openshift_base_domain }}'
-      headers:
-        X-Requested-With: 'XMLHttpRequest'
-        Authorization: 'Bearer ${QUAY_TOKEN}'
-      changeOrigin: true
-      secure: false
-
 dynamicPlugins:
   frontend:
     backstage-community.plugin-quay:
@@ -98,8 +85,8 @@ catalog:
 
   locations:
     # Quarkus Template
-    - type: url
-      target: https://{{ gitlab_hostname }}/platform-engineers/developer-hub/-/blob/main/backstage/software-templates/template-quarkus-simple/template.yaml
+    #- type: url
+    #  target: https://{{ gitlab_hostname }}/platform-engineers/developer-hub/-/blob/main/backstage/software-templates/template-quarkus-simple/template.yaml
     # - type: url
     #   target: https://{{ gitlab_hostname }}/platform-engineers/developer-hub/blob/main/backstage/catalog/gitlab-users-location.yaml
   
@@ -222,17 +209,6 @@ integrations:
       host: gitlab-gitlab.{{ openshift_base_domain }}
       token: ${GITLAB_TOKEN}
   
-  quay:
-    - host: quay.{{ openshift_base_domain }}
-      token: ${QUAY_TOKEN}
-
-jenkins:
-  instances:
-    - name: default
-      baseUrl: {{ jenkins_url }}
-      username: system:serviceaccount:jenkins:rhdh-jenkins
-      apiKey: ${JENKINS_TOKEN}
-
 initContainers:
   - name: install-dynamic-plugins
     resources:
