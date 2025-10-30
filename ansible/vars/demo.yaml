@@ -1,6 +1,6 @@
 # --- OpenShift ---
-openshift_base_domain: apps.cluster-gwk4m.gwk4m.sandbox650.opentlc.com
-openshift_api_domain: https://api.cluster-gwk4m.gwk4m.sandbox650.opentlc.com:6443
+openshift_base_domain: apps.cluster-zzrr8.zzrr8.sandbox2556.opentlc.com
+openshift_api_domain: https://api.cluster-zzrr8.zzrr8.sandbox2556.opentlc.com:6443
 desired_replicas: 1
 
 # --- GitOps ---
