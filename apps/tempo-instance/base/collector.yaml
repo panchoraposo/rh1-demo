@@ -28,9 +28,10 @@ spec:
       otlp:
         endpoint: "tempo-simplest-gateway.observability.svc:4317"
         tls:
-          insecure: true
+          insecure: false 
         auth:
           authenticator: bearertokenauth
+        
 
     service:
       extensions: [bearertokenauth]
