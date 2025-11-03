@@ -33,6 +33,8 @@ spec:
           
         auth:
           authenticator: bearertokenauth
+        headers:
+          X-Scope-OrgID: "dev"
 
     service:
       extensions: [bearertokenauth]
