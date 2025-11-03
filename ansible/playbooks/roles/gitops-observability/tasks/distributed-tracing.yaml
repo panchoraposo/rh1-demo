@@ -53,8 +53,7 @@
 - name: Get ODF (NooBaa) default StorageClass
   kubernetes.core.k8s_info:
     kind: StorageClass
-    label_selectors:
-      - storage.noobaa.io/part-of=noobaa
+    name: openshift-storage.noobaa.io
   register: odf_sc
   until: "odf_sc.resources | length > 0"
   retries: 10
