@@ -5,9 +5,9 @@ metadata:
   namespace: observability
 spec:
   config:
-    extensions:
-      bearertokenauth:
-        filename: "/var/run/secrets/kubernetes.io/serviceaccount/token"
+    #extensions:
+    #  bearertokenauth:
+    #    filename: "/var/run/secrets/kubernetes.io/serviceaccount/token"
 
     receivers:
       otlp:
@@ -31,13 +31,14 @@ spec:
         tls:
           insecure_skip_verify: true 
           
-        auth:
-          authenticator: bearertokenauth
+        #auth:
+        #  authenticator: bearertokenauth
         headers:
           X-Scope-OrgID: "dev"
 
     service:
-      extensions: [bearertokenauth]
+      #extensions: [bearertokenauth]
+      extensions: []
       pipelines:
         traces:
           receivers: [otlp, jaeger]
