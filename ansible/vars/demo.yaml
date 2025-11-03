@@ -1,6 +1,6 @@
 # --- OpenShift ---
-openshift_base_domain: apps.cluster-zzrr8.zzrr8.sandbox2556.opentlc.com
-openshift_api_domain: https://api.cluster-zzrr8.zzrr8.sandbox2556.opentlc.com:6443
+#openshift_base_domain: apps.cluster-zzrr8.zzrr8.sandbox2556.opentlc.com
+#openshift_api_domain: https://api.cluster-zzrr8.zzrr8.sandbox2556.opentlc.com:6443
 desired_replicas: 1
 
 # --- GitOps ---
@@ -165,3 +165,6 @@ helm_release_name: external-secrets
 chart_name: external-secrets/external-secrets
 service_account_name: external-secrets-operator-controller-manager
 kubeconfig_path: "{{ lookup('env', 'KUBECONFIG') | default('/home/' ~ (ansible_user | default('ansible')) ~ '/.kube/config', true) }}"
+
+# --- Observability
+observability_namespace: observability
