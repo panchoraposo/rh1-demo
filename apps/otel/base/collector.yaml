@@ -16,10 +16,10 @@ spec:
           http: {}
       jaeger:
         protocols:
-          thrift_binary:
-          thrift_compact:
-          thrift_http:
-          grpc:
+          thrift_binary: {}
+          thrift_compact: {}
+          thrift_http: {}
+          grpc: {}
 
     processors:
 
@@ -27,8 +27,10 @@ spec:
       debug: {}
       otlp:
         endpoint: "tempo-simplest-gateway.observability.svc:4317"
+        
         tls:
-          insecure: true
+          insecure_skip_verify: true 
+          
         auth:
           authenticator: bearertokenauth
 
@@ -38,3 +40,4 @@ spec:
         traces:
           receivers: [otlp, jaeger]
           exporters: [otlp, debug]
+
