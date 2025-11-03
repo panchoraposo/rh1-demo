@@ -169,3 +169,4 @@ kubeconfig_path: "{{ lookup('env', 'KUBECONFIG') | default('/home/' ~ (ansible_u
 # --- Observability
 observability_namespace: observability
 tempo_namespace: openshift-tempo-operator
+oco_namespace: openshift-cluster-observability-operator

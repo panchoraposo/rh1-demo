@@ -1,4 +1,13 @@
 ---
+- name: Create namespace for the OCO Operator
+  kubernetes.core.k8s:
+    state: present
+    definition:
+      apiVersion: v1
+      kind: Namespace
+      metadata:
+        name: "{{ oco_namespace }}"
+
 - name: Create the Argo CD Application for the Operator
   kubernetes.core.k8s:
     state: present
@@ -13,7 +22,7 @@
       spec:
         project: "default"
         destination:
-          namespace: "{{ observability_namespace }}"
+          namespace: "{{ oco_namespace }}"
           server: "https://kubernetes.default.svc"
         source:
           repoURL: "{{ gitops_repo }}"
