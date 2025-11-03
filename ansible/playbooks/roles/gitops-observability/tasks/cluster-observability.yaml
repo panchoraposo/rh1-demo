@@ -34,7 +34,7 @@
       apiVersion: argoproj.io/v1alpha1
       kind: Application
       metadata:
-        name: "distribuited tracing ui-plugin"
+        name: "ui-plugin"
         namespace: "{{ argocd_namespace }}"
         finalizers:
           - resources-finalizer.argocd.argoproj.io
