@@ -67,7 +67,7 @@
       kind: ObjectBucketClaim
       metadata:
         name: "tempo-bucket-claim"
-        namespace: "{{ tempo_namespace }}"
+        namespace: "{{ observability_namespace }}"
       spec:
         generateBucketName: "tempostack"
         storageClassName: "{{ odf_sc.resources[0].metadata.name }}"
@@ -76,7 +76,7 @@
   kubernetes.core.k8s_info:
     kind: Secret
     name: "tempo-bucket-claim"
-    namespace: "{{ tempo_namespace }}"
+    namespace: "{{ observability_namespace }}"
   register: odf_secret
   until: "odf_secret.resources | length > 0"
   retries: 20
@@ -86,7 +86,7 @@
   kubernetes.core.k8s_info:
     kind: ConfigMap
     name: "tempo-bucket-claim"
-    namespace: "{{ tempo_namespace }}"
+    namespace: "{{ observability_namespace }}"
   register: odf_cm
   until: "odf_cm.resources | length > 0"
   retries: 20
@@ -100,7 +100,7 @@
       kind: Secret
       metadata:
         name: "tempo-demo-s3"
-        namespace: "{{ tempo_namespace }}"
+        namespace: "{{ observability_namespace }}"
       stringData:
         access_key_id: "{{ odf_secret.resources[0].data.AWS_ACCESS_KEY_ID | b64decode }}"
         access_key_secret: "{{ odf_secret.resources[0].data.AWS_SECRET_ACCESS_KEY | b64decode }}"
@@ -121,7 +121,7 @@
       spec:
         project: "default"
         destination:
-          namespace: "{{ tempo_namespace }}"
+          namespace: "{{ observability_namespace }}"
           server: "https://kubernetes.default.svc"
         source:
           repoURL: "{{ gitops_repo }}"
