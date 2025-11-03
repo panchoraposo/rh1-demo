@@ -15,7 +15,7 @@
       apiVersion: argoproj.io/v1alpha1
       kind: Application
       metadata:
-        name: "{{ observability_namespace }}"
+        name: "otel-operator"
         namespace: "{{ argocd_namespace }}"
         finalizers:
           - resources-finalizer.argocd.argoproj.io
@@ -42,7 +42,7 @@
     kind: ClusterServiceVersion
     namespace: "{{ observability_namespace }}"
     label_selectors:
-      - "operators.coreos.com/redhat-opentelemetry-operator.{{ operator_namespace }}="
+      - "operators.coreos.com/opentelemetry-product.{{ observability_namespace }}=" 
   register: csv_status
   until: >
     csv_status.resources | length > 0 and
