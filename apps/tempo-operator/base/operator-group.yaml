@@ -2,5 +2,5 @@ apiVersion: operators.coreos.com/v1
 kind: OperatorGroup
 metadata:
   name: tempo-operator-group
-  namespace: openshift-tempo-operator
+  namespace: observability
 spec: {}
