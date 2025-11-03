@@ -24,7 +24,7 @@ roleRef:
 subjects:
   - kind: ServiceAccount
     name: dev-collector
-    namespace: quarkus
+    namespace: observability
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -57,4 +57,4 @@ roleRef:
 subjects:
   - kind: ServiceAccount
     name: dev-collector
-    namespace: quarkus
+    namespace: observability
