@@ -6,6 +6,6 @@ metadata:
 spec:
   channel: stable
   name: opentelemetry-operator
-  source: redhat-operators
+  source: redhat-opentelemetry-operator
   sourceNamespace: openshift-marketplace
   installPlanApproval: Automatic
