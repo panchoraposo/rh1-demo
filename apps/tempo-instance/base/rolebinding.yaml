@@ -2,22 +2,40 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: tempo-tenant-writer
+  name: tempostack-traces-reader
 rules:
-  - apiGroups: ["tempo.grafana.com"]
-    resources: ["tenants"]
-    verbs: ["push"]
-    resourceNames: ["1610b0c3-c509-4592-a256-a1871353dbfa"] 
+  - apiGroups:
+      - 'tempo.grafana.com'
+    resources:
+      - dev
+    resourceNames:
+      - traces
+    verbs:
+      - 'get'
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: otel-collector-tempo-writer
+  name: tempostack-traces-reader
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: tempo-tenant-writer
+  name: tempostack-traces-reader
+subjects:
+  - kind: Group
+    apiGroup: rbac.authorization.k8s.io
+    name: system:authenticated
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: view
+  namespace: tempo-observability
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: view
 subjects:
   - kind: ServiceAccount
-    name: opentelemetry-collector
-    namespace: observability
+    name: default
+    namespace: tempo-observability

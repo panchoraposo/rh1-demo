@@ -1,13 +1,17 @@
+---
 apiVersion: opentelemetry.io/v1beta1
 kind: OpenTelemetryCollector
 metadata:
   name: dev
   namespace: observability
 spec:
+  observability:
+    metrics:
+      enableMetrics: true
   config:
-    #extensions:
-    #  bearertokenauth:
-    #    filename: "/var/run/secrets/kubernetes.io/serviceaccount/token"
+    extensions:
+      bearertokenauth:
+        filename: "/var/run/secrets/kubernetes.io/serviceaccount/token"
 
     receivers:
       otlp:
@@ -16,31 +20,54 @@ spec:
           http: {}
       jaeger:
         protocols:
-          thrift_binary: {}
-          thrift_compact: {}
-          thrift_http: {}
           grpc: {}
+          thrift_http: {}
+          thrift_compact: {}
+          thrift_binary: {}
+      zipkin: {}
 
     processors:
+      k8sattributes: {}
+      batch: {}
+      memory_limiter:
+        check_interval: 1s
+        limit_percentage: 75
+        spike_limit_percentage: 25
+
+      
 
     exporters:
-      debug: {}
-      otlp:
-        endpoint: "tempo-simplest-distributor.observability.svc:4317"
-        
+      debug:
+        verbosity: normal
+
+      otlphttp/tempo:
+        endpoint: https://tempo-simplest-gateway.observability.svc.cluster.local:8080/api/traces/v1/dev
         tls:
-          insecure_skip_verify: true 
-          
-        #auth:
-        #  authenticator: bearertokenauth
-        headers:
-          X-Scope-OrgID: "dev"
+          insecure: false
+          ca_file: "/var/run/secrets/kubernetes.io/serviceaccount/service-ca.crt"
+        auth:
+          authenticator: bearertokenauth
+
+      
+      prometheus:
+        endpoint: 0.0.0.0:8889
+        resource_to_telemetry_conversion:
+          enabled: true
 
     service:
-      #extensions: [bearertokenauth]
-      extensions: []
+      telemetry:
+        logs:
+          level: "INFO"
+          development: true
+          encoding: "json"
+      extensions: [bearertokenauth]
       pipelines:
         traces:
-          receivers: [otlp, jaeger]
-          exporters: [otlp, debug]
-
+          receivers: [otlp, jaeger, zipkin]
+          processors: [memory_limiter, k8sattributes, batch]
+          exporters: [debug, otlphttp/tempo]
+        
+        metrics:
+          receivers: [otlp]
+          processors: [memory_limiter, k8sattributes, batch]
+          exporters: [debug, prometheus]
