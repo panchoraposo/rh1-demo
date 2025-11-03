@@ -1,2 +1,3 @@
 resources:
+  - rolebinding.yaml
   - collector.yaml

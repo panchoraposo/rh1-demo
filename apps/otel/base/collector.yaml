@@ -26,17 +26,15 @@ spec:
     exporters:
       debug: {}
       otlp:
-        endpoint: tempo-simplest-distributor.observability.svc:4317
+        endpoint: "tempo-simplest-gateway.observability.svc:4317"
         tls:
           insecure: true
         auth:
           authenticator: bearertokenauth
-        headers:
-          X-Scope-OrgID: "dev"
 
     service:
       extensions: [bearertokenauth]
       pipelines:
         traces:
           receivers: [otlp, jaeger]
-          exporters: [otlp]
+          exporters: [otlp, debug]
