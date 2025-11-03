@@ -1,42 +1,27 @@
-apiVersion: opentelemetry.io/v1beta1
-kind: OpenTelemetryCollector
+apiVersion: tempo.grafana.com/v1alpha1
+kind:  TempoStack
 metadata:
-  name: dev
+  name: simplest
   namespace: observability
 spec:
-  config:
-    extensions:
-      bearertokenauth:
-        filename: "/var/run/secrets/kubernetes.io/serviceaccount/token"
-
-    receivers:
-      otlp:
-        protocols:
-          grpc: {}
-          http: {}
-      jaeger:
-        protocols:
-          thrift_binary: {}
-          thrift_compact: {}
-          thrift_http: {}
-          grpc: {}
-
-    processors:
-
-    exporters:
-      debug: {}
-      otlp:
-        endpoint: "tempo-simplest-gateway.observability.svc:4317"
-        tls:
-          insecure: false 
-        auth:
-          authenticator: bearertokenauth
-        
-
-    service:
-      extensions: [bearertokenauth]
-      pipelines:
-        traces:
-          receivers: [otlp, jaeger]
-          exporters: [otlp, debug]
-
+  storage:
+    secret:
+      name: tempo-demo-s3
+      type: s3
+  storageSize: 1Gi
+  resources:
+    total:
+      limits:
+        memory: 2Gi
+        cpu: 2000m
+  tenants:
+    mode: openshift
+    authentication:
+      - tenantName: dev
+        tenantId: "1610b0c3-c509-4592-a256-a1871353dbfa"
+  template:
+    gateway:
+      enabled: true
+    queryFrontend:
+      jaegerQuery:
+        enabled: true
