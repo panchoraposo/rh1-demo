@@ -1,6 +1,4 @@
 # --- OpenShift ---
-#openshift_base_domain: apps.cluster-zzrr8.zzrr8.sandbox2556.opentlc.com
-#openshift_api_domain: https://api.cluster-zzrr8.zzrr8.sandbox2556.opentlc.com:6443
 desired_replicas: 1
 
 # --- GitOps ---
@@ -166,7 +164,13 @@ chart_name: external-secrets/external-secrets
 service_account_name: external-secrets-operator-controller-manager
 kubeconfig_path: "{{ lookup('env', 'KUBECONFIG') | default('/home/' ~ (ansible_user | default('ansible')) ~ '/.kube/config', true) }}"
 
-# --- Observability
+# --- Observability ---
 observability_namespace: observability
 tempo_namespace: openshift-tempo-operator
 oco_namespace: openshift-cluster-observability-operator
+
+# --- Logging ---
+clo_namespace: "openshift-logging"
+clo_csv_label_name: "cluster-logging"
+odf_storage_class: "openshift-storage.noobaa.io"
+odf_obc_name: "loki-bucket-claim"

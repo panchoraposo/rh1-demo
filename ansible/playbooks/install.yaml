@@ -13,3 +13,4 @@
     - role: gitops-deploy-odf
     - role: gitops-deploy-developer-hub
     - role: gitops-observability
+    - role: gitops-logging
