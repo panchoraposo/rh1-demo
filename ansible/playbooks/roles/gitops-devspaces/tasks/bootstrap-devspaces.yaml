@@ -1,0 +1,91 @@
+---
+- name: Create namespace for Dev Spaces
+  kubernetes.core.k8s:
+    state: present
+    definition:
+      apiVersion: v1
+      kind: Namespace
+      metadata:
+        name: "{{ devspaces_namespace }}"
+        labels:
+          argocd.argoproj.io/managed-by: "{{ argocd_namespace }}"
+
+- name: Create Argo CD Application for Dev Spaces Operator
+  kubernetes.core.k8s:
+    state: present
+    definition:
+      apiVersion: argoproj.io/v1alpha1
+      kind: Application
+      metadata:
+        name: "{{ devspaces_operator_app_name }}"
+        namespace: "{{ argocd_namespace }}"
+        finalizers: [ resources-finalizer.argocd.argoproj.io ]
+      spec:
+        project: "default"
+        destination:
+          namespace: "{{ devspaces_namespace }}"
+          server: "https://kubernetes.default.svc"
+        source:
+          repoURL: "{{ gitops_repo }}"
+          path: "apps/devspaces-instance/overlays/dev"
+          targetRevision: "main"
+          kustomize: {}
+        syncPolicy:
+          automated: { prune: true, selfHeal: true }
+          syncOptions: [ "CreateNamespace=false" ]
+
+- name: Wait for the Dev Spaces Operator to be ready
+  kubernetes.core.k8s_info:
+    api_version: operators.coreos.com/v1alpha1
+    kind: ClusterServiceVersion
+    namespace: "{{ devspaces_namespace }}"
+    label_selectors:
+      - "operators.coreos.com/{{ devspaces_csv_label_name }}.{{ devspaces_namespace }}="
+  register: csv_status_devspaces
+  until: >
+    csv_status_devspaces.resources | length > 0 and
+    csv_status_devspaces.resources[0].status.phase == "Succeeded"
+  retries: 40
+  delay: 15
+  no_log: true
+  vars: { ansible_conditional_need_retry: true }
+
+- name: Create the Argo CD Application for the CheCluster Instance
+  kubernetes.core.k8s:
+    state: present
+    definition:
+      apiVersion: argoproj.io/v1alpha1
+      kind: Application
+      metadata:
+        name: "{{ devspaces_instance_app_name }}"
+        namespace: "{{ argocd_namespace }}"
+        finalizers: [ resources-finalizer.argocd.argoproj.io ]
+      spec:
+        project: "default"
+        destination:
+          namespace: "{{ devspaces_namespace }}"
+          server: "https://kubernetes.default.svc"
+        source:
+          repoURL: "{{ gitops_repo }}"
+          path: "{{ devspaces_instance_git_path }}"
+          targetRevision: "{{ gitops_revision }}"
+          kustomize: {}
+        syncPolicy:
+          automated: { prune: true, selfHeal: true }
+          syncOptions: [ "CreateNamespace=false" ]
+
+- name: Wait for the CheCluster instance to be ready
+  kubernetes.core.k8s_info:
+    api_version: org.eclipse.che/v2
+    kind: CheCluster
+    name: "{{ devspaces_instance_name }}"
+    namespace: "{{ devspaces_namespace }}"
+  register: checluster_status
+  until: >
+    checluster_status.resources | length > 0 and
+    checluster_status.resources[0].status.cheClusterRunning is defined and
+    checluster_status.resources[0].status.cheClusterRunning == "Available"
+  retries: 60 # 60 retries * 15 seconds = 15 minutes
+  delay: 15
+  no_log: true
+  vars: { ansible_conditional_need_retry: true }
