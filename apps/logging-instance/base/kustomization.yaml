@@ -1,0 +1,3 @@
+resources:
+  - cluster-logging.yaml
+  - cluster-logforwarder.yaml
