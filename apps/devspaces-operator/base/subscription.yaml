@@ -6,6 +6,6 @@ metadata:
 spec:
   channel: stable
   installPlanApproval: Automatic
-  name: "openshift-devspaces"
+  name: "devspaces"
   source: "redhat-operators"
   sourceNamespace: "openshift-marketplace"
