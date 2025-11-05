@@ -174,3 +174,30 @@ clo_namespace: "openshift-logging"
 clo_csv_label_name: "cluster-logging"
 odf_storage_class: "openshift-storage.noobaa.io"
 odf_obc_name: "loki-bucket-claim"
+
+# --- Dev Spaces Operator ---
+devspaces_namespace: "openshift-devspaces"
+devspaces_operator_app_name: "devspaces-operator"
+devspaces_operator_git_path: "gitops/operators/devspaces-operator"
+devspaces_csv_label_name: "openshift-devspaces"
+
+# --- Dev Spaces Instance ---
+devspaces_instance_app_name: "devspaces"
+devspaces_instance_name: "devspaces"
+
+# --- dsc CLI ---
+dsc_version: "3.24.0"
+dsc_bin_path: "/usr/local/bin/dsc"
+dsc_temp_dir: "/tmp/dsc-install-{{ 1000 | random }}"
+dsc_arch_map:
+  x86_64: "x64"
+  aarch64: "arm64"
+  arm64: "arm64"
+dsc_platform_map:
+  Darwin: "darwin"
+  Linux: "linux"
+dsc_platform: "{{ dsc_platform_map[ansible_system] }}"
+dsc_arch: "{{ dsc_arch_map[ansible_architecture] }}"
+dsc_base_url: "https://developers.redhat.com/content-gateway/file/codeready_workspaces/{{ dsc_version }}"
+dsc_file_name: "devspaces-{{ dsc_version }}-dsc-{{ dsc_platform }}-{{ dsc_arch }}.tar.gz"
+dsc_download_url: "{{ dsc_base_url }}/{{ dsc_file_name }}"

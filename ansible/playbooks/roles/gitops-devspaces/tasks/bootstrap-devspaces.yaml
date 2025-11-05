@@ -34,14 +34,14 @@
           automated: { prune: true, selfHeal: true }
           syncOptions: [ "CreateNamespace=false" ]
 
-- name: Wait for the Dev Spaces Operator to be ready
+- name: Wait for the Dev Spaces Operator to be ready (CSV)
   kubernetes.core.k8s_info:
     api_version: operators.coreos.com/v1alpha1
     kind: ClusterServiceVersion
-    namespace: "{{ devspaces_namespace }}"
+    namespace: "{{ devspaces_namespace }}" 
     label_selectors:
-      - "operators.coreos.com/{{ devspaces_csv_label_name }}.{{ devspaces_namespace }}="
-  register: csv_status_devspaces
+      - "operators.coreos.com/devspaces.{{ devspaces_namespace }}="
+  register: csv_status_devspaces 
   until: >
     csv_status_devspaces.resources | length > 0 and
     csv_status_devspaces.resources[0].status.phase == "Succeeded"
@@ -64,44 +64,3 @@
   delay: 5
   vars: { ansible_conditional_need_retry: true }
 
-- name: Create the Argo CD Application for the CheCluster Instance
-  kubernetes.core.k8s:
-    state: present
-    definition:
-      apiVersion: argoproj.io/v1alpha1
-      kind: Application
-      metadata:
-        name: "{{ devspaces_instance_app_name }}"
-        namespace: "{{ argocd_namespace }}"
-        finalizers: [ resources-finalizer.argocd.argoproj.io ]
-      spec:
-        project: "default"
-        destination:
-          namespace: "{{ devspaces_namespace }}"
-          server: "https://kubernetes.default.svc"
-        source:
-          repoURL: "{{ gitops_repo }}"
-          path: "{{ devspaces_instance_git_path }}"
-          targetRevision: "{{ gitops_revision }}"
-          kustomize: {}
-        syncPolicy:
-          automated: { prune: true, selfHeal: true }
-          syncOptions: [ "CreateNamespace=false" ]
-
-- name: Wait for the CheCluster instance to be ready
-  kubernetes.core.k8s_info:
-    api_version: org.eclipse.che/v2
-    kind: CheCluster
-    namespace: "{{ devspaces_namespace }}"
-  register: checluster_list
-  vars:
-    ansible_conditional_need_retry: true
-    checluster: "{{ checluster_list.resources | selectattr('metadata.name', 'equalto', devspaces_instance_name) | list }}"
-  until: >
-    checluster | length > 0 and
-    checluster[0].status is defined and
-    checluster[0].status.cheClusterRunning is defined and
-    checluster[0].status.cheClusterRunning == "Available"
-  retries: 60 # 60 retries * 15 seconds = 15 minutes
-  delay: 15
-  no_log: true
