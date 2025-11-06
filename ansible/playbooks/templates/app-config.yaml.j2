@@ -97,11 +97,9 @@ catalog:
     - allow: [Component, System, API, Resource, Location, Template, Domain, User, Group]
 
   locations:
-    # Quarkus Template
-    #- type: url
-    #  target: https://{{ gitlab_hostname }}/platform-engineers/developer-hub/-/blob/main/backstage/software-templates/template-quarkus-simple/template.yaml
-    # - type: url
-    #   target: https://{{ gitlab_hostname }}/platform-engineers/developer-hub/blob/main/backstage/catalog/gitlab-users-location.yaml
+     Quarkus Template
+    - type: url
+      target: https://{{ gitlab_hostname }}/platform-engineers/developer-hub/-/blob/main/backstage/software-templates/quarkus-mcp-template/template.yaml
   
   providers:
     ## --- KEYCLOAK_CATALOG_PROVIDER ---
