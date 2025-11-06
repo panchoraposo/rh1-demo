@@ -201,3 +201,14 @@ dsc_arch: "{{ dsc_arch_map[ansible_architecture] }}"
 dsc_base_url: "https://developers.redhat.com/content-gateway/file/codeready_workspaces/{{ dsc_version }}"
 dsc_file_name: "devspaces-{{ dsc_version }}-dsc-{{ dsc_platform }}-{{ dsc_arch }}.tar.gz"
 dsc_download_url: "{{ dsc_base_url }}/{{ dsc_file_name }}"
+
+# --- Quay ---
+quay_namespace: quay
+s3_quay_bucket_name: quay-s3-bucket-claim
+quay_host: quay.{{ openshift_base_domain }}
+quay_admin_user: "quayadmin"
+quay_admin_password: "backstage"
+quay_org: "developers"
+quay_org_email: "developers@rhdh.com"
+quay_robot_name: "rhdh-reader"
+quay_robot_token: "{{ quay_robot_token }}"

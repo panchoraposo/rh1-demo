@@ -29,6 +29,19 @@ auth:
             - resolver: preferredUsernameMatchingUserEntityName
 signInPage: oidc
 
+quay:
+  uiUrl: https://quay.{{ openshift_base_domain }}
+
+proxy:
+  endpoints:
+    '/quay/api':
+      target: 'https://quay.{{ openshift_base_domain }}'
+      headers:
+        X-Requested-With: 'XMLHttpRequest'
+        Authorization: 'Bearer ${QUAY_TOKEN}'
+      changeOrigin: true
+      secure: false
+
 dynamicPlugins:
   frontend:
     backstage-community.plugin-quay:

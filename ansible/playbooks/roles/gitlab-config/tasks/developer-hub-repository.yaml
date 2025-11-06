@@ -117,6 +117,12 @@
     src: templates/app-config.yaml.j2
     dest: "{{ local_repo_path | default('/tmp/local_developer_hub_repo') }}/apps/developer-hub/overlays/dev/app-config.yaml"
     
+- name: Renderizar el template.yaml de Quarkus con los valores del entorno
+  ansible.builtin.template:
+    src: templates/quarkus-template.yaml.j2
+    dest: "{{ local_repo_path | default('/tmp/local_developer_hub_repo') }}/backstage/software-templates/template-quarkus-simple/template.yaml"
+    mode: '0644'
+
 - name: Commit de cambios
   ansible.builtin.shell: |
     cd {{ local_repo_path | default('/tmp/local_developer_hub_repo') }}
@@ -126,7 +132,7 @@
     git add backstage/software-templates/template-quarkus-simple/template.yaml
 
     if ! git diff --cached --quiet; then
-      git commit -m "Update app-config.yaml for demo env by Ansible"
+      git commit -m "Update app-config.yaml and template.yaml for dev env by Ansible"
       git push origin main
     else
       echo "No changes to commit"
