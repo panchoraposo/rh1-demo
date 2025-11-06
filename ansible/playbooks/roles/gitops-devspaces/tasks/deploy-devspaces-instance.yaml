@@ -44,21 +44,3 @@
         gitServices: {}
         networking: {}
 
-- name: Esperar a que la instancia '{{ devspaces_instance_name }}' esté 'Available'
-  kubernetes.core.k8s_info:
-    api_version: org.eclipse.che/v2
-    kind: CheCluster
-    namespace: "{{ devspaces_namespace }}"
-  register: checluster_list
-  vars:
-    ansible_conditional_need_retry: true
-    checluster: "{{ checluster_list.resources | selectattr('metadata.name', 'equalto', devspaces_instance_name) | list }}"
-  until: >
-    checluster | length > 0 and
-    checluster[0].status is defined and
-    checluster[0].status.cheClusterRunning is defined and
-    checluster[0].status.cheClusterRunning == "Available"
-  retries: 60 # 60 reintentos * 15 seg = 15 minutos de espera
-  delay: 15
-  no_log: true
-
