@@ -90,18 +90,15 @@ spec:
                   type: string
                   description: Host for storing image
                   default: {{ quay_host }} # <-- Jinja variable
-                # --- CAMBIOS AQUÍ ---
-                quay_robot_username: # <-- CAMBIO: Nuevo campo
+                quay_robot_username:
                   title: Quay Robot Username
                   type: string
                   description: "Full username of the Quay robot (e.g., developers+robotname)"
-                  # default: "developers+rhdh-reader" # Opcional: poner valor por defecto
-                quay_robot_token: # <-- CAMBIO: Nuevo campo
+                quay_robot_token:
                   title: Quay Robot Token
                   type: string
                   description: Token associated with the Quay robot
                   ui:field: Secret
-                # --- FIN DE CAMBIOS ---
                 image_tag:
                   title: Image Tag
                   default: latest
@@ -151,7 +148,7 @@ spec:
           destination: ${{ parameters.gitlab_group }}/${{ parameters.component_id }}
 {% endraw %}
           cluster_subdomain: {{ openshift_base_domain }}
-          image_organization: 'developers' # <-- CAMBIO: Organización fijada
+          image_organization: 'developers'
           port: 8080
           gitops_namespace: openshift-gitops
 {% raw %}
@@ -186,6 +183,7 @@ spec:
       input:
         url: ./manifests
         copyWithoutTemplating: []
+        
         values:
 {% raw %}
           component_id: ${{ parameters.component_id }}
@@ -195,23 +193,18 @@ spec:
           namespace: ${{ parameters.component_id }}-dev
           image_registry: ${{ parameters.image_registry }}
           image_host: ${{ parameters.image_host }}
-{% endraw %}
-          image_organization: 'developers' # <-- CAMBIO: Organización fijada
-          # --- CAMBIOS AQUÍ ---
-{% raw %}
-          quay_robot_username: ${{ parameters.quay_robot_username }} # <-- CAMBIO: Pasa el username
-          quay_robot_token: ${{ parameters.quay_robot_token }} # <-- CAMBIO: Pasa el token
+          quay_robot_username: ${{ parameters.quay_robot_username }}
+          quay_robot_token: ${{ parameters.quay_robot_token }}
           image_name: ${{ parameters.component_id }}
           image_tag: ${{ parameters.image_tag }}
+          repository_host: ${{ parameters.repo.host }}
 {% endraw %}
-          # --- FIN DE CAMBIOS ---
+          # --- Ansible values (Jinja) ---
+          image_organization: 'developers'
           gitops_namespace: openshift-gitops
           gitops_project: default
           port: 8080
-          cluster_subdomain: {{ openshift_base_domain }} # <-- Jinja variable
-{% raw %}
-          repository_host: ${{ parameters.repo.host }}
-{% endraw %}
+          cluster_subdomain: {{ openshift_base_domain }}
 {% raw %}
         targetPath: ./${{ parameters.gitlab_group }}-${{ parameters.component_id }}-gitops
 {% endraw %}
