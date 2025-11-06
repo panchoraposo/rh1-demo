@@ -120,7 +120,7 @@
 - name: Renderizar el template.yaml de Quarkus con los valores del entorno
   ansible.builtin.template:
     src: templates/quarkus-template.yaml.j2
-    dest: "{{ local_repo_path | default('/tmp/local_developer_hub_repo') }}/backstage/software-templates/template-quarkus-simple/template.yaml"
+    dest: "{{ local_repo_path | default('/tmp/local_developer_hub_repo') }}/backstage/software-templates/quarkus-mcp-template/template.yaml"
     mode: '0644'
 
 - name: Commit de cambios
