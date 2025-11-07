@@ -149,16 +149,22 @@
     url: "https://{{ quay_url }}/api/v1/user/robots/rhdh-reader"
     method: PUT
     validate_certs: false
+    url_username: "{{ quay_admin_user }}"
+    url_password: "{{ quay_admin_password }}"
+    force_basic_auth: true
     headers:
-      Authorization: "Bearer {{ quay_api_token }}"
+      Content-Type: "application/json"
     body_format: json
-    body: {}
+    body:
+      description: "Robot para Red Hat Developer Hub (RHDH)"
     status_code: [200, 201]
   register: robot_account
+  no_log: true
 
-- name: "Capturar el token del robot de RHDH"
+- name: "Capturar el token y el nombre del robot de RHDH"
   ansible.builtin.set_fact:
-    rhdh_robot_token: "{{ robot_account.json.token }}"
+    quay_robot_token: "{{ robot_account.json.token }}"
+    quay_robot_username: "{{ robot_account.json.name }}"
   no_log: true
   when: robot_account.json.token is defined
 
@@ -171,5 +177,5 @@
     namespace: "{{ rhdh_namespace }}"
     definition:
       stringData:
-        QUAY_TOKEN: "{{ rhdh_robot_token }}"
+        QUAY_TOKEN: "{{ quay_robot_token }}"
 
