@@ -147,8 +147,9 @@ spec:
           cluster: ${{ parameters.repo.host }}
           host: ${{ parameters.repo.host }}
           destination: ${{ parameters.gitlab_group }}/${{ parameters.component_id }}
-          image_organization: ${{ parameters.image_organization }}
+          cluster_subdomain: {{ openshift_base_domain }}
 {% endraw %}
+          image_organization: 'quayadmin'
           port: 8080
           gitops_namespace: openshift-gitops
 {% raw %}
@@ -192,11 +193,11 @@ spec:
           namespace: ${{ parameters.component_id }}-dev
           image_registry: ${{ parameters.image_registry }}
           image_host: ${{ parameters.image_host }}
-          image_organization: ${{ parameters.image_organization }}
           image_password: ${{ secrets.image_password }}
           image_name: ${{ parameters.component_id }}
           image_tag: ${{ parameters.image_tag }}
 {% endraw %}
+          image_organization: 'quayadmin'
           gitops_namespace: openshift-gitops
           gitops_project: default
           port: 8080
