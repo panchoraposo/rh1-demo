@@ -27,7 +27,7 @@
   ansible.builtin.debug:
     msg: "Se escalará la siguiente MachineSet a {{ desired_replicas }} réplica(s): {{ target_machineset_name }}"
 
-- name: "⚙️ Escalar la MachineSet de worker estándar"
+- name: "Escalar la MachineSet a {{ desired_replicas }} réplicas (usando patch)"
   kubernetes.core.k8s:
     state: patched
     api_version: machine.openshift.io/v1beta1
@@ -36,5 +36,5 @@
     namespace: openshift-machine-api
     definition:
       spec:
-        replicas: "{{ desired_replicas | int }}"
+        replicas: "{{ desired_replicas }}"
   register: patch_result
