@@ -1,5 +1,5 @@
 # --- OpenShift ---
-desired_replicas: 1
+desired_replicas: 2
 
 # --- GitOps ---
 output_file: /tmp/gitops-subscription.yaml

@@ -90,21 +90,12 @@ spec:
                   type: string
                   description: Host for storing image
                   default: {{ quay_host }} # <-- Jinja variable
-                quay_robot_username:
-                  title: Quay Robot Username
-                  type: string
-                  description: "Full username of the Quay robot (e.g., developers+robotname)"
-                quay_robot_token:
-                  title: Quay Robot Token
-                  type: string
-                  description: Token associated with the Quay robot
-                  ui:field: Secret
                 image_tag:
                   title: Image Tag
                   default: latest
                   type: string
                   description: Build Image tag
-
+            
     - title: Application repository Information
       required:
         - repo
@@ -148,7 +139,7 @@ spec:
           destination: ${{ parameters.gitlab_group }}/${{ parameters.component_id }}
 {% endraw %}
           cluster_subdomain: {{ openshift_base_domain }}
-          image_organization: 'developers'
+          image_organization: 'quayadmin'
           port: 8080
           gitops_namespace: openshift-gitops
 {% raw %}
@@ -193,14 +184,13 @@ spec:
           namespace: ${{ parameters.component_id }}-dev
           image_registry: ${{ parameters.image_registry }}
           image_host: ${{ parameters.image_host }}
-          quay_robot_username: ${{ parameters.quay_robot_username }}
-          quay_robot_token: ${{ parameters.quay_robot_token }}
           image_name: ${{ parameters.component_id }}
           image_tag: ${{ parameters.image_tag }}
           repository_host: ${{ parameters.repo.host }}
 {% endraw %}
-          # --- Ansible values (Jinja) ---
-          image_organization: 'developers'
+          image_organization: 'quayadmin'
+          quay_robot_username: "quayadmin+rhdh_robot"
+          quay_robot_token: "{{ rhdh_robot_token }}"
           gitops_namespace: openshift-gitops
           gitops_project: default
           port: 8080
