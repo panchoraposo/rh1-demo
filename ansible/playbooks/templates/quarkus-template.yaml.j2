@@ -1,9 +1,9 @@
 apiVersion: scaffolder.backstage.io/v1beta3
 kind: Template
 metadata:
-  name: quarkus-web-template
-  title: Quarkus MCP
-  description: Create a simple Quarkus MCP Server with Argo CD
+  name: quarkus-mcp-template
+  title: Quarkus Service
+  description: Create a simple MCP Server using Quarkus with Argo CD
   tags:
     - recommended
     - java
@@ -17,13 +17,12 @@ spec:
       required:
         - component_id
         - java_package_name
-        - owner
       properties:
         component_id:
           title: Name
           type: string
           description: Unique name of the component
-          default: my-quarkus-app
+          default: my-quarkus-mcp
           ui:field: EntityNamePicker
           maxLength: 18
         group_id:
@@ -40,15 +39,20 @@ spec:
           title: Java Package Name
           default: com.redhat.rhdh
           type: string
-          description: Name for the java package. eg (com.redhat.blah)
+          description: Name for the Java package. eg (com.redhat.blah)
         description:
           title: Description
           type: string
-          default: A cool quarkus app
+          default: A cool Quarkus MCP Server!
         owner:
           title: Owner
           type: string
-          default: developers
+          description: Owner of the component
+          ui:field: OwnerPicker
+          ui:options:
+            allowedKinds:
+              - Group
+          default: group:default/developers
 
     - title: Provide Image Registry Information
       required:
@@ -85,13 +89,23 @@ spec:
                   title: Image Host
                   type: string
                   description: Host for storing image
-                  default: {{ quay_host }} # <-- Variable de Ansible
+                  default: {{ quay_host }}
+                image_organization:
+                  title: Quay Organization
+                  type: string
+                  description: The organization in Quay where the image will be stored.
+                  default: quayadmin
+                image_password:
+                  title: Password
+                  type: string
+                  description: Your Quay password
+                  ui:field: Secret
                 image_tag:
                   title: Image Tag
                   default: latest
                   type: string
                   description: Build Image tag
-
+    
     - title: Application repository Information
       required:
         - repo
@@ -121,6 +135,7 @@ spec:
       input:
         url: ./skeleton
         values:
+{% raw %}
           component_id: ${{ parameters.component_id }}
           description: ${{ parameters.description }}
           namespace: ${{ parameters.component_id }}-dev
@@ -132,26 +147,34 @@ spec:
           cluster: ${{ parameters.repo.host }}
           host: ${{ parameters.repo.host }}
           destination: ${{ parameters.gitlab_group }}/${{ parameters.component_id }}
+          image_organization: ${{ parameters.image_organization }}
+{% endraw %}
           port: 8080
           gitops_namespace: openshift-gitops
-          image_organization: 'quayadmin'
-          cluster_subdomain: {{ openshift_base_domain }}
+{% raw %}
         targetPath: ./${{ parameters.gitlab_group }}-${{ parameters.component_id }}
+{% endraw %}
 
     - id: publish
       name: Publish
       action: publish:gitlab
       input:
+{% raw %}
         repoUrl: "${{ parameters.repo.host }}?owner=${{ parameters.gitlab_group }}&repo=${{ parameters.component_id }}"
+{% endraw %}
         repoVisibility: public
         defaultBranch: main
+{% raw %}
         sourcePath: ./${{ parameters.gitlab_group }}-${{ parameters.component_id }}
+{% endraw %}
 
     - id: register
       name: Register
       action: catalog:register
       input:
+{% raw %}
         repoContentsUrl: ${{ steps.publish.output.repoContentsUrl }}
+{% endraw %}
         catalogInfoPath: "/catalog-info.yaml"
 
     - id: template-gitops-deployment
@@ -161,51 +184,66 @@ spec:
         url: ./manifests
         copyWithoutTemplating: []
         values:
+{% raw %}
           component_id: ${{ parameters.component_id }}
-          source_repository_gitops: https://${{ parameters.repo.host }}/${{ parameters.owner }}/${{ parameters.component_id }}-gitops.git
-          source_repository: https://${{ parameters.repo.host }}/${{ parameters.owner }}/${{ parameters.component_id }}.git
-          owner: ${{ parameters.owner }}
+          source_repository_gitops: https://${{ parameters.repo.host }}/${{ parameters.gitlab_group }}/${{ parameters.component_id }}-gitops.git
+          source_repository: https://${{ parameters.repo.host }}/${{ parameters.gitlab_group }}/${{ parameters.component_id }}.git
+          owner: ${{ parameters.owner | parseEntityRef | pick('name') }}
           namespace: ${{ parameters.component_id }}-dev
           image_registry: ${{ parameters.image_registry }}
           image_host: ${{ parameters.image_host }}
+          image_organization: ${{ parameters.image_organization }}
+          image_password: ${{ secrets.image_password }}
           image_name: ${{ parameters.component_id }}
           image_tag: ${{ parameters.image_tag }}
-          repository_host: ${{ parameters.repo.host }}
-          image_organization: 'quayadmin'
-          quay_robot_username: "{{ rhdh_robot_username }}"
-          quay_robot_token: "{{ rhdh_robot_token }}"
+{% endraw %}
           gitops_namespace: openshift-gitops
           gitops_project: default
           port: 8080
           cluster_subdomain: {{ openshift_base_domain }}
-        targetPath: ./${{ parameters.owner }}-${{ parameters.component_id }}-gitops
+{% raw %}
+          repository_host: ${{ parameters.repo.host }}
+{% endraw %}
+{% raw %}
+        targetPath: ./${{ parameters.gitlab_group }}-${{ parameters.component_id }}-gitops
+{% endraw %}
 
     - id: publish-gitops
       name: Publishing to Resource Repository
       action: publish:gitlab
       input:
-        repoUrl: "${{ parameters.repo.host }}?owner=${{ parameters.owner }}&repo=${{ parameters.component_id }}-gitops"
+{% raw %}
+        repoUrl: "${{ parameters.repo.host }}?owner=${{ parameters.gitlab_group }}&repo=${{ parameters.component_id }}-gitops"
+{% endraw %}
         repoVisibility: public
         defaultBranch: main
+{% raw %}
         title: gitops resources for ${{ parameters.component_id }}
         description: gitops resources for ${{ parameters.component_id }}
-        sourcePath: ./${{ parameters.owner }}-${{ parameters.component_id }}-gitops
+        sourcePath: ./${{ parameters.gitlab_group }}-${{ parameters.component_id }}-gitops
+{% endraw %}
 
     - id: create-argocd-resources
       name: Create Argo CD Resources
       action: argocd:create-resources
       input:
+{% raw %}
         appName: ${{ parameters.component_id }}-bootstrap
+{% endraw %}
         argoInstance: main
         namespace: openshift-gitops
-        repoUrl: https://${{ parameters.repo.host }}/${{ parameters.owner }}/${{ parameters.component_id }}-gitops.git
+{% raw %}
+        repoUrl: https://${{ parameters.repo.host }}/${{ parameters.gitlab_group }}/${{ parameters.component_id }}-gitops.git
+{% endraw %}
         path: 'argocd/'
         upsert: true
 
   output:
     links:
       - title: Source Code Repository
+{% raw %}
         url: ${{ steps.publish.output.remoteUrl }}
       - title: Open Component in catalog
         icon: catalog
         entityRef: ${{ steps.register.output.entityRef }}
+{% endraw %}
