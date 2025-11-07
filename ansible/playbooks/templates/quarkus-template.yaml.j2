@@ -85,7 +85,7 @@ spec:
                   title: Image Host
                   type: string
                   description: Host for storing image
-                  default: {{ quay_host }}
+                  default: {{ quay_host }} # <-- Variable de Ansible
                 image_tag:
                   title: Image Tag
                   default: latest
@@ -172,8 +172,8 @@ spec:
           image_tag: ${{ parameters.image_tag }}
           repository_host: ${{ parameters.repo.host }}
           image_organization: 'quayadmin'
-          quay_robot_username: "{{ quay_robot_username }}"
-          quay_robot_token: "{{ quay_robot_token }}"
+          quay_robot_username: "{{ rhdh_robot_username }}"
+          quay_robot_token: "{{ rhdh_robot_token }}"
           gitops_namespace: openshift-gitops
           gitops_project: default
           port: 8080
