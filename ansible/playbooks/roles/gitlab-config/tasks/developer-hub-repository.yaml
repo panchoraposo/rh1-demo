@@ -129,7 +129,7 @@
     git config user.name "Ansible Automation"
     git config user.email "ansible-automation@{{ gitlab_host | regex_replace('^https?://', '') }}"
     git add apps/developer-hub/overlays/dev/app-config.yaml
-    git add backstage/software-templates/quarkus-mcp-template/template.yaml
+    git add software-templates/quarkus-mcp-template/template.yaml
 
     if ! git diff --cached --quiet; then
       git commit -m "Update app-config.yaml and template.yaml for dev env by Ansible"
