@@ -196,15 +196,13 @@ spec:
           image_password: ${{ secrets.image_password }}
           image_name: ${{ parameters.component_id }}
           image_tag: ${{ parameters.image_tag }}
+          cluster_subdomain: {{ openshift_base_domain }}
+          repository_host: ${{ parameters.repo.host }}
 {% endraw %}
           image_organization: 'quayadmin'
           gitops_namespace: openshift-gitops
           gitops_project: default
           port: 8080
-          cluster_subdomain: {{ openshift_base_domain }}
-{% raw %}
-          repository_host: ${{ parameters.repo.host }}
-{% endraw %}
 {% raw %}
         targetPath: ./${{ parameters.gitlab_group }}-${{ parameters.component_id }}-gitops
 {% endraw %}
@@ -220,8 +218,6 @@ spec:
         defaultBranch: main
 {% raw %}
         title: gitops resources for ${{ parameters.component_id }}
-        description: gitops resources for ${{ parameters.component_id }}
-        sourcePath: ./${{ parameters.gitlab_group }}-${{ parameters.component_id }}-gitops
 {% endraw %}
 
     - id: create-argocd-resources
@@ -237,7 +233,6 @@ spec:
         repoUrl: https://${{ parameters.repo.host }}/${{ parameters.gitlab_group }}/${{ parameters.component_id }}-gitops.git
 {% endraw %}
         path: 'argocd/'
-        upsert: true
 
   output:
     links:
