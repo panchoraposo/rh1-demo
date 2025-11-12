@@ -148,10 +148,10 @@ spec:
           host: ${{ parameters.repo.host }}
           destination: ${{ parameters.gitlab_group }}/${{ parameters.component_id }}
           {% endraw %}
-          cluster_subdomain: {{ openshift_base_domain }}
           image_organization: 'quayadmin'
           port: 8080
           gitops_namespace: openshift-gitops
+          cluster_subdomain: {{ openshift_base_domain }}
 {% raw %}
         targetPath: ./${{ parameters.gitlab_group }}-${{ parameters.component_id }}
 {% endraw %}
@@ -187,7 +187,6 @@ spec:
           component_id: ${{ parameters.component_id }}
           source_repository_gitops: https://${{ parameters.repo.host }}/${{ parameters.gitlab_group }}/${{ parameters.component_id }}-gitops.git
           source_repository: https://${{ parameters.repo.host }}/${{ parameters.gitlab_group }}/${{ parameters.component_id }}.git
-          owner: ${{ parameters.owner | parseEntityRef | pick('name') }}
           namespace: ${{ parameters.component_id }}-dev
           image_registry: ${{ parameters.image_registry }}
           image_host: ${{ parameters.image_host }}
@@ -195,11 +194,12 @@ spec:
           image_name: ${{ parameters.component_id }}
           image_tag: ${{ parameters.image_tag }}
           repository_host: ${{ parameters.repo.host }}
-          {% endraw %}
-          cluster_subdomain: {{ openshift_base_domain }}
+          {% endraw %}          
           image_organization: 'quayadmin'
           gitops_namespace: openshift-gitops
           gitops_project: default
+          owner: developers
+          cluster_subdomain: {{ openshift_base_domain }}
           port: 8080
 {% raw %}
         targetPath: ./${{ parameters.gitlab_group }}-${{ parameters.component_id }}-gitops
@@ -211,6 +211,7 @@ spec:
       input:
 {% raw %}
         repoUrl: "${{ parameters.repo.host }}?owner=${{ parameters.gitlab_group }}&repo=${{ parameters.component_id }}-gitops"
+        sourcePath: ./${{ parameters.gitlab_group }}-${{ parameters.component_id }}-gitops
 {% endraw %}
         repoVisibility: public
         defaultBranch: main
