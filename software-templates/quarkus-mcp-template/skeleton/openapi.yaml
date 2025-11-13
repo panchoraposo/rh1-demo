@@ -1,7 +1,7 @@
 ---
 openapi: 3.0.3
 info:
-  title: quarkus-app API
+  title: ${{values.component_id}} API
   version: 1.0-SNAPSHOT
 servers:
 - url: http://localhost:8080
@@ -12,7 +12,7 @@ paths:
   /hello:
     get:
       tags:
-      - Greeting Resource
+      - Example Resource
       responses:
         "200":
           description: OK

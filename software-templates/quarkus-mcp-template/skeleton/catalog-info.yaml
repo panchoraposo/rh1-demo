@@ -46,6 +46,9 @@ metadata:
   {%- if values.description %}
   description: ${{values.description | dump}}
   {%- endif %}
+  tags:
+    - quarkus
+    - mcp
 spec:
   type: openapi
   lifecycle: development
