@@ -2,7 +2,7 @@ apiVersion: scaffolder.backstage.io/v1beta3
 kind: Template
 metadata:
   name: quarkus-mcp-template
-  title: Quarkus Service
+  title: Quarkus MCP Template
   description: Create a simple MCP Server using Quarkus with Argo CD
   tags:
     - recommended
@@ -22,24 +22,24 @@ spec:
           title: Name
           type: string
           description: Unique name of the component
-          default: my-quarkus-mcp
+          default: customer-service-mcp
           ui:field: EntityNamePicker
           maxLength: 18
         group_id:
           title: Group Id
           type: string
-          default: com.redhat.rhdh
+          default: com.neuralbank
           description: Maven Group Id
         artifact_id:
           title: Artifact Id
           type: string
-          default: quarkus-app
+          default: customer-service-mcp
           description: Maven Artifact Id
         java_package_name:
           title: Java Package Name
-          default: com.redhat.rhdh
+          default: com.neuralbank
           type: string
-          description: Name for the Java package. eg (com.redhat.blah)
+          description: Name for the Java package. eg (com.neuralbank.blah)
         description:
           title: Description
           type: string
