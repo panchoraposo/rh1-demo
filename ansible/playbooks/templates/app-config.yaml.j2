@@ -6,6 +6,18 @@ backend:
   listen:
     port: 7007
     host: 0.0.0.0
+  
+  auth:
+     externalAccess:
+       - type: static
+         options:
+           token: ${MCP_TOKEN}
+           subject: mcp-clients
+
+  actions:
+     pluginSources:
+       - software-catalog-mcp-tool
+       - techdocs-mcp-tool
 
 ## This is a development and testing authentication configuration
 #auth:
@@ -97,11 +109,12 @@ catalog:
     - allow: [Component, System, API, Resource, Location, Template, Domain, User, Group]
 
   locations:
-    # Quarkus Template
+    # Quarkus MCP Template
     - type: url
       target: https://{{ gitlab_hostname }}/platform-engineers/developer-hub/-/blob/main/software-templates/quarkus-mcp-template/template.yaml
+    # Customer Service API
     - type: url
-      target: https://github.com/pkstaz/neuralbank-workshop/blob/master/customer-service/src/main/resources/META-INF/openapi.yaml
+      target: https://{{ gitlab_hostname }}/platform-engineers/developer-hub/-/blob/main/legacy-apps/customer-service/catalog-info.yaml
   
   providers:
     ## --- KEYCLOAK_CATALOG_PROVIDER ---

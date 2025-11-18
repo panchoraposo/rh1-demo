@@ -9,9 +9,11 @@ metadata:
     - java
     - quarkus
     - maven
+
 spec:
   owner: developers
   type: service
+
   parameters:
     - title: Provide Information for Application
       required:
@@ -105,7 +107,7 @@ spec:
                   default: latest
                   type: string
                   description: Build Image tag
-    
+
     - title: Application repository Information
       required:
         - repo
@@ -135,7 +137,7 @@ spec:
       input:
         url: ./skeleton
         values:
-          {% raw %}
+{% raw %}
           component_id: ${{ parameters.component_id }}
           description: ${{ parameters.description }}
           namespace: ${{ parameters.component_id }}-dev
@@ -147,7 +149,7 @@ spec:
           cluster: ${{ parameters.repo.host }}
           host: ${{ parameters.repo.host }}
           destination: ${{ parameters.gitlab_group }}/${{ parameters.component_id }}
-          {% endraw %}
+{% endraw %}
           image_organization: 'quayadmin'
           port: 8080
           gitops_namespace: openshift-gitops
@@ -183,7 +185,7 @@ spec:
         url: ./manifests
         copyWithoutTemplating: []
         values:
-          {% raw %}
+{% raw %}
           component_id: ${{ parameters.component_id }}
           source_repository_gitops: https://${{ parameters.repo.host }}/${{ parameters.gitlab_group }}/${{ parameters.component_id }}-gitops.git
           source_repository: https://${{ parameters.repo.host }}/${{ parameters.gitlab_group }}/${{ parameters.component_id }}.git
@@ -194,7 +196,7 @@ spec:
           image_name: ${{ parameters.component_id }}
           image_tag: ${{ parameters.image_tag }}
           repository_host: ${{ parameters.repo.host }}
-          {% endraw %}          
+{% endraw %}
           image_organization: 'quayadmin'
           gitops_namespace: openshift-gitops
           gitops_project: default

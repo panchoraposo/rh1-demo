@@ -212,3 +212,6 @@ quay_org: "developers"
 quay_org_email: "developers@rhdh.com"
 quay_robot_name: "rhdh-reader"
 quay_robot_token: "{{ quay_robot_token }}"
+
+# --- MCP ---
+mcp_token: "rhdh-static-token"

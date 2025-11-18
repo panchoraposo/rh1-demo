@@ -12,3 +12,6 @@
 
 - name: Clone repository and render values
   include_tasks: developer-hub-repository.yaml
+
+- name: Configure Dev Spaces
+  include_tasks: configure-devspaces.yaml
