@@ -23,28 +23,28 @@ spec:
           title: Name
           type: string
           description: Unique name of the component
-          default: my-quarkus-app
+          default: customer-service-mcp
           ui:field: EntityNamePicker
           maxLength: 18
         group_id:
           title: Group Id
           type: string
-          default: com.redhat.rhdh
+          default: com.neuralbank
           description: Maven Group Id
         artifact_id:
           title: Artifact Id
           type: string
-          default: quarkus-app
+          default: customer-service-mcp
           description: Maven Artifact Id
         java_package_name:
           title: Java Package Name
-          default: com.redhat.rhdh
+          default: com.neuralbank
           type: string
-          description: Name for the java package. eg (com.redhat.blah)
+          description: Name for the java package. eg (com.neuralbank.blah)
         description:
           title: Description
           type: string
-          default: A cool quarkus app
+          default: A cool Quarkus MCP Server
         owner:
           title: Owner
           type: string
@@ -86,11 +86,6 @@ spec:
                   type: string
                   description: Host for storing image
                   default: quay-quay-quay.apps.cluster-7tmxn.7tmxn.sandbox610.opentlc.com
-                image_password:
-                  title: Password
-                  type: string
-                  description: Your Quay password
-                  ui:field: Secret
                 image_tag:
                   title: Image Tag
                   default: latest
@@ -179,7 +174,7 @@ spec:
           image_registry: ${{ parameters.image_registry }}
           image_host: ${{ parameters.image_host }}
           image_organization: ${{ user.entity.metadata.name }}
-          image_password: ${{ secrets.image_password }}
+          image_password: backstage
           image_name: ${{ parameters.component_id }}
           image_tag: ${{ parameters.image_tag }}
           gitops_namespace: openshift-gitops
