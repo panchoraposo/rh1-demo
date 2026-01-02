@@ -212,6 +212,7 @@ public class CustomerTools {
         }
     }
 
+    /* 
     @Tool(description = "Update the risk level for a customer with justification.")
     public String updateRiskLevel(
             @ToolArg(description = "Customer ID. Can be passed as a number (e.g., 2) or string (e.g., \"2\")") String customerId,
@@ -230,6 +231,7 @@ public class CustomerTools {
             return "Error: " + e.getMessage();
         }
     }
+    */
 
     // ============================================
     // CUSTOMER STATUS MANAGEMENT
