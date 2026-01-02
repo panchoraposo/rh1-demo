@@ -30,7 +30,7 @@ pat_name_rhdh: "ansible-generated-pat-rhdh"
 pat_scopes: ["api", "sudo"]
 github_repo_url: "https://github.com/panchoraposo/rh1-demo"
 new_gitlab_repo_name: "developer-hub"
-pat_expires_at: "2025-12-31"
+pat_expires_at: "2026-12-31"
 local_repo_path: /tmp/gitlab-rhdh
 target_overlay_path: /tmp/gitlab-rhdh/apps/developer-hub/overlays/dev/app-config.yaml
 gitlab_redirect_uri: "https://{{ keycloak_hostname }}/realms/{{ keycloak_realm }}/broker/gitlab/endpoint"
